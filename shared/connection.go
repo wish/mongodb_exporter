@@ -9,7 +9,7 @@ import (
 	"net"
 
 	"github.com/golang/glog"
-	"gopkg.in/mgo.v2"
+	"github.com/globalsign/mgo"
 )
 
 const (

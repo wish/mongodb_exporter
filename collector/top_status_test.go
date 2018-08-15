@@ -3,7 +3,7 @@ package collector
 import (
 	"testing"
 
-	"gopkg.in/mgo.v2/bson"
+	"github.com/globalsign/mgo/bson"
 )
 
 func Test_ParserTopStatus(t *testing.T) {

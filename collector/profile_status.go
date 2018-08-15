@@ -3,8 +3,8 @@ package collector
 import (
 	"github.com/golang/glog"
 	"github.com/prometheus/client_golang/prometheus"
-	mgo "gopkg.in/mgo.v2"
-	"gopkg.in/mgo.v2/bson"
+	mgo "github.com/globalsign/mgo"
+	"github.com/globalsign/mgo/bson"
 	"time"
 )
 

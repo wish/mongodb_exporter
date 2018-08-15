@@ -5,9 +5,6 @@ import:
   version: v0.8.0
   subpackages:
   - prometheus
-- package: gopkg.in/mgo.v2
-  subpackages:
-  - bson
 - package: github.com/rwynn/gtm
   version: 63986e27649537009d330931e9b2a4a48c44d017
   repo: https://github.com/jacksontj/gtm.git

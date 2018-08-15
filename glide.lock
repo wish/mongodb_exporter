@@ -1,12 +1,12 @@
-hash: 664c4e2773f45b34777ff90a7d98a68d68de591d0943378fea875f71c9c3c184
-updated: 2018-08-14T17:53:53.496185571-07:00
+hash: afb4bce39984a81148a4115629075549b4e1d90d023f10ae85b6d432a3c67f7b
+updated: 2018-08-14T19:09:46.023453625-07:00
 imports:
 - name: github.com/beorn7/perks
-  version: 4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9
+  version: 3a771d992973f24aa725d07868b467d1ddfceafb
   subpackages:
   - quantile
 - name: github.com/globalsign/mgo
-  version: efe0945164a7e582241f37ae8983c075f8f2e870
+  version: 113d3961e7311526535a1ef7042196563d442761
   subpackages:
   - bson
   - internal/json
@@ -15,7 +15,7 @@ imports:
 - name: github.com/golang/glog
   version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
 - name: github.com/golang/protobuf
-  version: 17ce1425424ab154092bbb43af630bd647f3bb0d
+  version: aa810b61a9c79d51363740d207bb46cf8e620ed5
   subpackages:
   - proto
 - name: github.com/matttproud/golang_protobuf_extensions
@@ -23,35 +23,30 @@ imports:
   subpackages:
   - pbutil
 - name: github.com/pkg/errors
-  version: 645ef00459ed84a119197bfb8d8205042c6df63d
+  version: 816c9085562cd7ee03e7f8188a1cfd942858cded
 - name: github.com/prometheus/client_golang
   version: c5b7fccd204277076155f10851dad72b76a49317
   subpackages:
   - prometheus
 - name: github.com/prometheus/client_model
-  version: 6f3806018612930941127f2a7c6c453ba2c527d2
+  version: 5c3871d89910bfb32f5fcab2aa4b9ec68e65a99f
   subpackages:
   - go
 - name: github.com/prometheus/common
-  version: e3fb1a1acd7605367a2b378bc2e2f893c05174b7
+  version: c7de2306084e37d54b8be01f3541a8464345e9a5
   subpackages:
   - expfmt
   - internal/bitbucket.org/ww/goautoneg
   - model
 - name: github.com/prometheus/procfs
-  version: a6e9df898b1336106c743392c48ee0b71f5c4efa
+  version: 05ee40e3a273f7245e8777337fc7b46e533a9a92
   subpackages:
+  - internal/util
+  - nfs
   - xfs
 - name: github.com/rwynn/gtm
   version: 63986e27649537009d330931e9b2a4a48c44d017
   repo: https://github.com/jacksontj/gtm.git
 - name: github.com/serialx/hashring
-  version: 6a9381c5a83e926b9f1fd907395a581e69747e96
-- name: gopkg.in/mgo.v2
-  version: 3f83fa5005286a7fe593b055f0d7771a7dce4655
-  subpackages:
-  - bson
-  - internal/json
-  - internal/sasl
-  - internal/scram
+  version: 49a4782e9908fe098c907022a1bd7519c79803d6
 testImports: []
