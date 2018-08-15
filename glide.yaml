@@ -9,5 +9,5 @@ import:
   subpackages:
   - bson
 - package: github.com/rwynn/gtm
-  version: e2d851f1cab470b95aa42e375455c873699bc4f2
+  version: 63986e27649537009d330931e9b2a4a48c44d017
   repo: https://github.com/jacksontj/gtm.git

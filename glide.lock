@@ -1,5 +1,5 @@
-hash: bef8401ee62260468eb95508a65009b9e7aadc076845eccc9c5a3e70a1818e76
-updated: 2018-06-12T15:16:19.541093562-07:00
+hash: 664c4e2773f45b34777ff90a7d98a68d68de591d0943378fea875f71c9c3c184
+updated: 2018-08-14T17:53:53.496185571-07:00
 imports:
 - name: github.com/beorn7/perks
   version: 4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9
@@ -43,7 +43,7 @@ imports:
   subpackages:
   - xfs
 - name: github.com/rwynn/gtm
-  version: e2d851f1cab470b95aa42e375455c873699bc4f2
+  version: 63986e27649537009d330931e9b2a4a48c44d017
   repo: https://github.com/jacksontj/gtm.git
 - name: github.com/serialx/hashring
   version: 6a9381c5a83e926b9f1fd907395a581e69747e96
