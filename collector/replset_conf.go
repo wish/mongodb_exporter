@@ -6,9 +6,14 @@ import (
 
 	"github.com/golang/glog"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/prometheus/pkg/labels"
 )
 
 var (
+	// Map to keep track of what members we have seen. With this we can remove
+	// metrics for members that are removed from the RS
+	members = make(map[uint64]prometheus.Labels)
+
 	memberHidden = prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Namespace: Namespace,
 		Subsystem: subsystem,
@@ -89,11 +94,22 @@ type MemberConf struct {
 
 // Export exports the replSetGetStatus stati to be consumed by prometheus
 func (replConf *ReplSetConf) Export(ch chan<- prometheus.Metric) {
+	// map to keep track of labelsets that we see in this pass
+	lsMap := make(map[uint64]struct{})
+
 	for _, member := range replConf.Members {
 		ls := prometheus.Labels{
 			"id":   replConf.Id,
 			"host": member.Host,
 		}
+		// Add the labelset to lsMap to keep track of what we have seen
+		lsHash := labels.FromMap(ls).Hash()
+		lsMap[lsHash] = struct{}{}
+		// If this is a new member, add it
+		if _, ok := members[lsHash]; !ok {
+			members[lsHash] = ls
+		}
+
 		if member.Hidden {
 			memberHidden.With(ls).Set(1)
 		} else {
@@ -115,6 +131,19 @@ func (replConf *ReplSetConf) Export(ch chan<- prometheus.Metric) {
 		memberPriority.With(ls).Set(float64(member.Priority))
 		memberVotes.With(ls).Set(float64(member.Votes))
 	}
+
+	// Check if there are any members that have gone away that we should remove
+	for lsHash, ls := range members {
+		// If that labelset isn't there anymore -- remove it
+		if _, ok := lsMap[lsHash]; !ok {
+			memberHidden.Delete(ls)
+			memberArbiter.Delete(ls)
+			memberBuildIndexes.Delete(ls)
+			memberPriority.Delete(ls)
+			memberVotes.Delete(ls)
+		}
+	}
+
 	// collect metrics
 	memberHidden.Collect(ch)
 	memberArbiter.Collect(ch)
