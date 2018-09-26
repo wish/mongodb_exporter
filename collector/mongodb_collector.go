@@ -4,9 +4,9 @@ import (
 	"time"
 
 	"github.com/dcu/mongodb_exporter/shared"
+	"github.com/globalsign/mgo"
 	"github.com/golang/glog"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/globalsign/mgo"
 )
 
 var (
@@ -37,6 +37,7 @@ type MongodbCollectorOpts struct {
 	CollectCollectionMetrics bool
 	CollectProfileMetrics    bool
 	CollectConnPoolStats     bool
+	CollectParameterMetrics  bool
 	UserName                 string
 	AuthMechanism            string
 	SocketTimeout            time.Duration
@@ -130,6 +131,10 @@ func (exporter *MongodbCollector) Collect(ch chan<- prometheus.Metric) {
 			glog.Info("Collecting Connection Pool Stats")
 			exporter.collectConnPoolStats(mongoSess, ch)
 		}
+		if exporter.Opts.CollectParameterMetrics {
+			glog.Info("Collection parameter metrics")
+			exporter.collectParameter(mongoSess, ch)
+		}
 	} else {
 		upGauge.WithLabelValues().Set(float64(0))
 		upGauge.Collect(ch)
@@ -144,6 +149,17 @@ func (exporter *MongodbCollector) collectServerStatus(session *mgo.Session, ch c
 		serverStatus.Export(ch)
 	}
 	return serverStatus
+}
+
+func (exporter *MongodbCollector) collectParameter(session *mgo.Session, ch chan<- prometheus.Metric) *ParameterMetrics {
+	parameterMetrics := GetParameters(session)
+
+	if parameterMetrics != nil {
+		glog.Info("exporting Parameter Metrics")
+		parameterMetrics.Export(ch)
+	}
+
+	return parameterMetrics
 }
 
 func (exporter *MongodbCollector) collectReplSetStatus(session *mgo.Session, ch chan<- prometheus.Metric) *ReplSetStatus {
