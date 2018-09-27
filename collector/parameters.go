@@ -60,7 +60,7 @@ func GetParameters(session *mgo.Session, parameters string) *ParameterMetrics {
 				}
 				metric.Set(float64(bit))
 			default:
-				g.log.Error("Unknown parameter value for %v: %v", parameter, valTyped)
+				glog.Error("Unknown parameter value for %v: %v", parameter, valTyped)
 			}
 		} else {
 			glog.Error("Unexpected response from getParameter command: %v", result)
