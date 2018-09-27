@@ -38,6 +38,7 @@ type MongodbCollectorOpts struct {
 	CollectProfileMetrics    bool
 	CollectConnPoolStats     bool
 	CollectParameterMetrics  bool
+	CollectParameters        string
 	UserName                 string
 	AuthMechanism            string
 	SocketTimeout            time.Duration
@@ -133,7 +134,7 @@ func (exporter *MongodbCollector) Collect(ch chan<- prometheus.Metric) {
 		}
 		if exporter.Opts.CollectParameterMetrics {
 			glog.Info("Collection parameter metrics")
-			exporter.collectParameter(mongoSess, ch)
+			exporter.collectParameter(mongoSess, ch, exporter.Opts.CollectParameters)
 		}
 	} else {
 		upGauge.WithLabelValues().Set(float64(0))
@@ -151,8 +152,8 @@ func (exporter *MongodbCollector) collectServerStatus(session *mgo.Session, ch c
 	return serverStatus
 }
 
-func (exporter *MongodbCollector) collectParameter(session *mgo.Session, ch chan<- prometheus.Metric) *ParameterMetrics {
-	parameterMetrics := GetParameters(session)
+func (exporter *MongodbCollector) collectParameter(session *mgo.Session, ch chan<- prometheus.Metric, parameters string) *ParameterMetrics {
+	parameterMetrics := GetParameters(session, parameters)
 
 	if parameterMetrics != nil {
 		glog.Info("exporting Parameter Metrics")

@@ -58,6 +58,7 @@ var (
 	mongodbCollectProfileMetrics        = flag.Bool("mongodb.collect.profile", false, "Collect MongoDB profile metrics")
 	mongodbCollectConnPoolStats         = flag.Bool("mongodb.collect.connpoolstats", false, "Collect MongoDB connpoolstats")
 	mongodbCollectParameterMetrics      = flag.Bool("mongodb.collect.parameter", true, "Collect MongoDB parameter metrics")
+	mongodbCollectParameters            = flag.String("mongodb.collect.parameter.parameters", "cursorTimeoutMillis", "Comma-separated list of setParameters to collect values for")
 	mongodbSocketTimeout                = flag.Duration("mongodb.socket-timeout", 0, "timeout for socket operations to mongodb")
 	version                             = flag.Bool("version", false, "Print mongodb_exporter version")
 )
@@ -163,6 +164,7 @@ func registerCollector() {
 		CollectProfileMetrics:    *mongodbCollectProfileMetrics,
 		CollectConnPoolStats:     *mongodbCollectConnPoolStats,
 		CollectParameterMetrics:  *mongodbCollectParameterMetrics,
+		CollectParameters:        *mongodbCollectParameters,
 		UserName:                 *mongodbUserName,
 		AuthMechanism:            *mongodbAuthMechanism,
 		SocketTimeout:            *mongodbSocketTimeout,
