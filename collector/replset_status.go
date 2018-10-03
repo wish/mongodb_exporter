@@ -1,6 +1,7 @@
 package collector
 
 import (
+	"sync"
 	"time"
 
 	"github.com/globalsign/mgo"
@@ -111,6 +112,9 @@ var (
 		Name:      "member_optime",
 		Help:      "Information regarding the last operation from the operation log that this member has applied.",
 	}, []string{"set", "name"})
+
+	// Lock for using these metrics
+	replsetStatsLock = sync.Mutex{}
 )
 
 // ReplSetStatus keeps the data returned by the GetReplSetStatus method
@@ -145,6 +149,9 @@ type Member struct {
 
 // Export exports the replSetGetStatus stati to be consumed by prometheus
 func (replStatus *ReplSetStatus) Export(ch chan<- prometheus.Metric) {
+	replsetStatsLock.Lock()
+	defer replsetStatsLock.Unlock()
+
 	myState.Reset()
 	myReplicaLag.Reset()
 	term.Reset()

@@ -1,6 +1,8 @@
 package collector
 
 import (
+	"sync"
+
 	mgo "github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
 	"github.com/golang/glog"
@@ -42,6 +44,9 @@ var (
 		Name:      "index_size_bytes",
 		Help:      "The total size of all indexes",
 	}, []string{"ns"})
+
+	// Lock for using these metrics
+	collectionStatsLock = sync.Mutex{}
 )
 
 type CollectionStatus struct {
@@ -54,6 +59,9 @@ type CollectionStatus struct {
 }
 
 func (collStatus *CollectionStatus) Export(ch chan<- prometheus.Metric) {
+	collectionStatsLock.Lock()
+	defer collectionStatsLock.Unlock()
+
 	count.WithLabelValues(collStatus.Name).Set(float64(collStatus.Count))
 	size.WithLabelValues(collStatus.Name).Set(float64(collStatus.Size))
 	avgObjSize.WithLabelValues(collStatus.Name).Set(float64(collStatus.AvgSize))

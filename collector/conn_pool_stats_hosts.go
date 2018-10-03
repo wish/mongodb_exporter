@@ -1,6 +1,8 @@
 package collector
 
 import (
+	"sync"
+
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -28,6 +30,9 @@ var (
 		Name: "created",
 		Help: "Corresponds to the total number of client connections to mongo.",
 	}, []string{"host"})
+
+	// Lock for using these metrics
+	connPoolStatsLock = sync.Mutex{}
 )
 
 // ServerStatus keeps the data returned by the serverStatus() method.
@@ -39,6 +44,9 @@ type HostConnPoolStats struct {
 
 // Export exports the server status to be consumed by prometheus.
 func (stats *HostConnPoolStats) Export(hostname string, ch chan<- prometheus.Metric) {
+	connPoolStatsLock.Lock()
+	defer connPoolStatsLock.Unlock()
+
 	inUse.WithLabelValues(hostname).Set(float64(stats.InUse))
 	inUse.Collect(ch)
 	inUse.Reset()

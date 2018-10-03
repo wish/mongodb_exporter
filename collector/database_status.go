@@ -2,6 +2,7 @@ package collector
 
 import (
 	"strings"
+	"sync"
 
 	mgo "github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
@@ -40,6 +41,9 @@ var (
 		Name:      "objects_total",
 		Help:      "Contains a count of the number of objects (i.e. documents) in the database across all collections",
 	}, []string{"db", "shard"})
+
+	// Lock for using these metrics
+	dbStatsLock = sync.Mutex{}
 )
 
 // DatabaseStatus represents stats about a database
@@ -65,6 +69,9 @@ type RawStatus struct {
 
 // Export exports database stats to prometheus
 func (dbStatus *DatabaseStatus) Export(ch chan<- prometheus.Metric) {
+	dbStatsLock.Lock()
+	defer dbStatsLock.Unlock()
+
 	if len(dbStatus.Shards) > 0 {
 		for shard, stats := range dbStatus.Shards {
 			shard = strings.Split(shard, "/")[0]

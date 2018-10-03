@@ -1,6 +1,7 @@
 package collector
 
 import (
+	"sync"
 	"time"
 
 	"github.com/dcu/mongodb_exporter/shared"
@@ -20,6 +21,9 @@ var (
 		Name:      "up",
 		Help:      "To show if we can connect to mongodb instance",
 	}, []string{})
+
+	// Lock for using these metrics
+	collectorLock = sync.Mutex{}
 )
 
 // MongodbCollectorOpts is the options of the mongodb collector.
@@ -87,9 +91,11 @@ func (exporter *MongodbCollector) Describe(ch chan<- *prometheus.Desc) {
 func (exporter *MongodbCollector) Collect(ch chan<- prometheus.Metric) {
 	mongoSess := shared.MongoSession(exporter.Opts.toSessionOps())
 	if mongoSess != nil {
+		collectorLock.Lock()
 		upGauge.WithLabelValues().Set(float64(1))
 		upGauge.Collect(ch)
 		upGauge.Reset()
+		collectorLock.Unlock()
 		defer mongoSess.Close()
 		glog.Info("Collecting Server Status")
 		exporter.collectServerStatus(mongoSess, ch)
@@ -137,9 +143,11 @@ func (exporter *MongodbCollector) Collect(ch chan<- prometheus.Metric) {
 			exporter.collectParameter(mongoSess, ch, exporter.Opts.CollectParameters)
 		}
 	} else {
+		collectorLock.Lock()
 		upGauge.WithLabelValues().Set(float64(0))
 		upGauge.Collect(ch)
 		upGauge.Reset()
+		collectorLock.Unlock()
 	}
 }
 

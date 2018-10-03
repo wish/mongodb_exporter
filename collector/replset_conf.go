@@ -1,6 +1,8 @@
 package collector
 
 import (
+	"sync"
+
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
 
@@ -13,6 +15,8 @@ var (
 	// Map to keep track of what members we have seen. With this we can remove
 	// metrics for members that are removed from the RS
 	members = make(map[uint64]prometheus.Labels)
+	// Lock for using these metrics
+	memberLock = sync.Mutex{}
 
 	memberHidden = prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Namespace: Namespace,
@@ -94,6 +98,9 @@ type MemberConf struct {
 
 // Export exports the replSetGetStatus stati to be consumed by prometheus
 func (replConf *ReplSetConf) Export(ch chan<- prometheus.Metric) {
+	memberLock.Lock()
+	defer memberLock.Unlock()
+
 	// map to keep track of labelsets that we see in this pass
 	lsMap := make(map[uint64]struct{})
 
