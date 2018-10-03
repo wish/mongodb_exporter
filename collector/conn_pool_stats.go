@@ -1,10 +1,10 @@
 package collector
 
 import (
-	"github.com/golang/glog"
-	"github.com/prometheus/client_golang/prometheus"
 	mgo "github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
+	"github.com/golang/glog"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 // server connections -- all of these!
@@ -37,7 +37,7 @@ var (
 		Help:      "Corresponds to the total number of client connections to mongo that are currently available.",
 	})
 
-	totalCreated = prometheus.NewCounter(prometheus.CounterOpts{
+	totalCreated = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: Namespace,
 		Subsystem: "connpoolstats",
 		Name:      "connections_created_total",

@@ -1,10 +1,10 @@
 package collector
 
 import (
-	"github.com/golang/glog"
-	"github.com/prometheus/client_golang/prometheus"
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
+	"github.com/golang/glog"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 // TopStatus represents top metrics

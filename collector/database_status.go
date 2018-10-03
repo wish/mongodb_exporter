@@ -3,10 +3,10 @@ package collector
 import (
 	"strings"
 
-	"github.com/golang/glog"
-	"github.com/prometheus/client_golang/prometheus"
 	mgo "github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
+	"github.com/golang/glog"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 var (

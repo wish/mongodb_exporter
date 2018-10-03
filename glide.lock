@@ -1,10 +1,12 @@
 hash: afb4bce39984a81148a4115629075549b4e1d90d023f10ae85b6d432a3c67f7b
-updated: 2018-08-14T19:09:46.023453625-07:00
+updated: 2018-10-02T17:23:54.483643929-07:00
 imports:
 - name: github.com/beorn7/perks
   version: 3a771d992973f24aa725d07868b467d1ddfceafb
   subpackages:
   - quantile
+- name: github.com/cespare/xxhash
+  version: 569f7c8abf1f58d9043ab804d364483cb1c853b6
 - name: github.com/globalsign/mgo
   version: 113d3961e7311526535a1ef7042196563d442761
   subpackages:
@@ -44,6 +46,10 @@ imports:
   - internal/util
   - nfs
   - xfs
+- name: github.com/prometheus/prometheus
+  version: 6932030aa1fdf997a79ae37da359d6af222c59c1
+  subpackages:
+  - pkg/labels
 - name: github.com/rwynn/gtm
   version: 63986e27649537009d330931e9b2a4a48c44d017
   repo: https://github.com/jacksontj/gtm.git

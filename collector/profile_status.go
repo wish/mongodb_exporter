@@ -1,11 +1,12 @@
 package collector
 
 import (
-	"github.com/golang/glog"
-	"github.com/prometheus/client_golang/prometheus"
+	"time"
+
 	mgo "github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
-	"time"
+	"github.com/golang/glog"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 var (
