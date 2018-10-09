@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/globalsign/mgo"
-	"github.com/globalsign/mgo/bson"
 	"github.com/golang/glog"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/rwynn/gtm"
@@ -41,9 +40,6 @@ func (o *OplogTailStats) Start(session *mgo.Session) {
 	// which seriously impede oplog performance
 	timeout := time.Second * 120
 	session.SetSocketTimeout(timeout)
-	// Set cursor timeout
-	var tmp map[string]interface{}
-	session.Run(bson.D{{"setParameter", 1}, {"cursorTimeoutMillis", timeout / time.Millisecond}}, &tmp)
 
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
