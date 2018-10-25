@@ -6,5 +6,5 @@ import:
   subpackages:
   - prometheus
 - package: github.com/rwynn/gtm
-  version: 63986e27649537009d330931e9b2a4a48c44d017
+  version: ff28f9494a2319afc2ded425942ecb6d1e4c8aa9
   repo: https://github.com/jacksontj/gtm.git

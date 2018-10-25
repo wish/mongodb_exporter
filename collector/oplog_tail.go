@@ -44,7 +44,12 @@ func (o *OplogTailStats) Start(session *mgo.Session) {
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
 
-	ctx := gtm.Start(session, nil)
+    // We want to include all oplog metrics, as such we'll include migrate entries
+    // which are the entries with `fromMigrate`
+	opts := gtm.DefaultOptions()
+	opts.IncludeMigrate = true
+
+	ctx := gtm.Start(session, opts)
 	defer ctx.Stop()
 
 	// ctx.OpC is a channel to read ops from
