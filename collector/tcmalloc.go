@@ -33,6 +33,12 @@ var (
 		Help:      "Whether aggressive_memory_decommit is on",
 	})
 
+	tcmallocSpinlogkTotalDelayNs = prometheus.NewGauge(prometheus.GaugeOpts{
+		Namespace: Namespace,
+		Name:      "tcmalloc_spinlock_total_delay_ns",
+		Help:      "Total ns spent on the tcmalloc spinlock",
+	})
+
 	tcmallocFreeBytes = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: Namespace,
 		Name:      "tcmalloc_free_bytes",
@@ -62,6 +68,7 @@ type DetailedTCMallocStats struct {
 	PageheapTotalDecommitBytes float64 `bson:"pageheap_total_decommit_bytes"`
 	PageheapReserveCount       float64 `bson:"pageheap_reserve_count"`
 	PageheapTotalReserveBytes  float64 `bson:"pageheap_total_reserve_bytes"`
+	SpinlockTotalDelayNS       float64 `bson:"spinlock_total_delay_ns"`
 
 	MaxTotalThreadCacheBytes     float64 `bson:"max_total_thread_cache_bytes"`
 	CurrentTotalThreadCacheBytes float64 `bson:"current_total_thread_cache_bytes"`
@@ -105,6 +112,9 @@ func (m *TCMallocStats) Export(ch chan<- prometheus.Metric) {
 	tcmallocAggressiveDecommit.Set(m.Details.AggressiveMemoryDecommit)
 	tcmallocAggressiveDecommit.Collect(ch)
 
+	tcmallocSpinlogkTotalDelayNs.Set(m.Details.SpinlockTotalDelayNS)
+	tcmallocSpinlogkTotalDelayNs.Collect(ch)
+
 	tcmallocFreeBytes.Set(m.Details.TotalFreeBytes)
 	tcmallocFreeBytes.Collect(ch)
 
@@ -117,5 +127,6 @@ func (m *TCMallocStats) Describe(ch chan<- *prometheus.Desc) {
 	tcmallocPageheapCounts.Describe(ch)
 	tcmallocCacheBytes.Describe(ch)
 	tcmallocAggressiveDecommit.Describe(ch)
+	tcmallocSpinlogkTotalDelayNs.Describe(ch)
 	tcmallocFreeBytes.Describe(ch)
 }
