@@ -1,6 +1,7 @@
 package collector
 
 import (
+	"reflect"
 	"strings"
 
 	"github.com/globalsign/mgo"
@@ -44,12 +45,16 @@ func GetParameters(session *mgo.Session, parameters string) *ParameterMetrics {
 		result := make(map[string]interface{})
 		err := session.DB("admin").Run(bson.D{{"getParameter", 1}, {parameter, 1}}, result)
 		if err != nil {
-			glog.Error("Failed to get parameter value for %v: %v", parameter, err)
+			glog.Errorf("Failed to get parameter value for %v: %v", parameter, err)
 			continue
 		}
 		if val, ok := result[parameter]; ok {
 			switch valTyped := val.(type) {
 			case int:
+				metric.Set(float64(valTyped))
+			case int32:
+				metric.Set(float64(valTyped))
+			case int64:
 				metric.Set(float64(valTyped))
 			case float64:
 				metric.Set(valTyped)
@@ -60,10 +65,10 @@ func GetParameters(session *mgo.Session, parameters string) *ParameterMetrics {
 				}
 				metric.Set(float64(bit))
 			default:
-				glog.Error("Unknown parameter value for %v: %v", parameter, valTyped)
+				glog.Errorf("Unknown parameter value for %v: %v of type %v", parameter, valTyped, reflect.TypeOf(val))
 			}
 		} else {
-			glog.Error("Unexpected response from getParameter command: %v", result)
+			glog.Errorf("Unexpected response from getParameter command: %v", result)
 		}
 	}
 	return &ParameterMetrics{}
