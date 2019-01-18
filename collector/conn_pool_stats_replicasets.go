@@ -10,8 +10,8 @@ var (
 	pingTime = prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Namespace: Namespace,
 		Subsystem: "connpoolstats",
-		Name:      "pingtime",
-		Help:      "Corresponds to the total number of client connections to mongo.",
+		Name:      "ping_time_seconds",
+		Help:      "Corresponds to the ping time from this mongos to the corresponding host in seconds",
 	}, []string{"host", "rs"})
 
 	// Lock for using these metrics
@@ -33,7 +33,7 @@ func (stats *ReplicaSetStats) Export(replicaSet string, ch chan<- prometheus.Met
 	defer connPoolReplicaSetStatsLock.Unlock()
 
 	for _, rsHostStat := range stats.Hosts {
-		pingTime.WithLabelValues(rsHostStat.Host, replicaSet).Set(rsHostStat.PingTime)
+		pingTime.WithLabelValues(rsHostStat.Host, replicaSet).Set(rsHostStat.PingTime * (time.Millisecond / time.Second))
 		pingTime.Collect(ch)
 		pingTime.Reset()
 	}
