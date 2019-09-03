@@ -124,14 +124,14 @@ func GetOplogStatus(session *mgo.Session, maxTimeMS int64) *OplogStatus {
 	oplogStatus := &OplogStatus{}
 	collectionStats, err := GetOplogCollectionStats(session, maxTimeMS)
 	if err != nil {
-		glog.Error("Failed to get local.oplog_rs collection stats.")
+		glog.Errorf("Failed to get local.oplog_rs collection stats: %v", err)
 		return nil
 	}
 
 	headTimestamp, err := GetOplogTimestamp(session, false)
 	tailTimestamp, err := GetOplogTimestamp(session, true)
 	if err != nil {
-		glog.Error("Failed to get oplog head or tail timestamps.")
+		glog.Errorf("Failed to get oplog head or tail timestamps: %v", err)
 		return nil
 	}
 

@@ -173,7 +173,7 @@ func GetReplSetConf(session *mgo.Session) *ReplSetConf {
 	result := &OuterReplSetConf{}
 	err := session.DB("admin").Run(bson.D{{"replSetGetConfig", 1}}, result)
 	if err != nil {
-		glog.Error("Failed to get replSet config.")
+		glog.Errorf("Failed to get replSet config: %v", err)
 		return nil
 	}
 	return &result.Config
