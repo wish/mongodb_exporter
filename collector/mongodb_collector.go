@@ -47,6 +47,7 @@ type MongodbCollectorOpts struct {
 	AuthMechanism            string
 	SocketTimeout            time.Duration
 	MaxTimeMS                int64
+	Mongos                   bool
 }
 
 func (in MongodbCollectorOpts) toSessionOps() shared.MongoSessionOpts {
@@ -173,6 +174,9 @@ func (exporter *MongodbCollector) collectParameter(session *mgo.Session, ch chan
 }
 
 func (exporter *MongodbCollector) collectReplSetStatus(session *mgo.Session, ch chan<- prometheus.Metric) *ReplSetStatus {
+	if exporter.Opts.Mongos {
+		return &ReplSetStatus{}
+	}
 	replSetStatus := GetReplSetStatus(session)
 
 	if replSetStatus != nil {
@@ -184,6 +188,9 @@ func (exporter *MongodbCollector) collectReplSetStatus(session *mgo.Session, ch 
 }
 
 func (exporter *MongodbCollector) collectReplSetConf(session *mgo.Session, ch chan<- prometheus.Metric) *ReplSetConf {
+	if exporter.Opts.Mongos {
+		return &ReplSetConf{}
+	}
 	replSetConf := GetReplSetConf(session)
 
 	if replSetConf != nil {
@@ -195,6 +202,9 @@ func (exporter *MongodbCollector) collectReplSetConf(session *mgo.Session, ch ch
 }
 
 func (exporter *MongodbCollector) collectOplogStatus(session *mgo.Session, ch chan<- prometheus.Metric) *OplogStatus {
+	if exporter.Opts.Mongos {
+		return &OplogStatus{}
+	}
 	oplogStatus := GetOplogStatus(session, exporter.Opts.MaxTimeMS)
 
 	if oplogStatus != nil {

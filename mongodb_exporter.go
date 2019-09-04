@@ -63,6 +63,7 @@ var (
 	mongodbSocketTimeout                = flag.Duration("mongodb.socket-timeout", 0, "timeout for socket operations to mongodb")
 	mongodbMaxTimeMS                    = flag.Duration("mongodb.maxtimems", 0, "maxTimeMs set for blocking database commands")
 	version                             = flag.Bool("version", false, "Print mongodb_exporter version")
+	mongos                              = flag.Bool("mongos", false, "Disable features only present in mongos")
 )
 
 type basicAuthHandler struct {
@@ -171,6 +172,7 @@ func registerCollector() {
 		AuthMechanism:            *mongodbAuthMechanism,
 		SocketTimeout:            *mongodbSocketTimeout,
 		MaxTimeMS:                int64(*mongodbMaxTimeMS / time.Millisecond),
+		Mongos:                   *mongos,
 	})
 	prometheus.MustRegister(mongodbCollector)
 }
