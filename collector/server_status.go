@@ -60,8 +60,9 @@ type ServerStatus struct {
 	Mem            *MemStats            `bson:"mem"`
 	Metrics        *MetricsStats        `bson:"metrics"`
 
-	Cursors  *Cursors  `bson:"cursors"`
-	Sharding *Sharding `bson:"sharding"`
+	Cursors            *Cursors            `bson:"cursors"`
+	Sharding           *Sharding           `bson:"sharding"`
+	ShardingStatistics *ShardingStatistics `bson:"shardingStatistics"`
 
 	StorageEngine *StorageEngineStats `bson:"storageEngine"`
 	WiredTiger    *WiredTigerStats    `bson:"wiredTiger"`
@@ -123,6 +124,9 @@ func (status *ServerStatus) Export(ch chan<- prometheus.Metric) {
 	}
 	if status.Sharding != nil {
 		status.Sharding.Export(ch)
+	}
+	if status.ShardingStatistics != nil {
+		status.ShardingStatistics.Export(ch)
 	}
 
 	if status.WiredTiger != nil {
@@ -193,6 +197,9 @@ func (status *ServerStatus) Describe(ch chan<- *prometheus.Desc) {
 	}
 	if status.Sharding != nil {
 		status.Sharding.Describe(ch)
+	}
+	if status.ShardingStatistics != nil {
+		status.ShardingStatistics.Describe(ch)
 	}
 	if status.WiredTiger != nil {
 		status.WiredTiger.Describe(ch)
